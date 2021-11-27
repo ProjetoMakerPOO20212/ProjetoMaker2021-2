@@ -1,19 +1,21 @@
 package projetomaker;
 
 import DBA.*;
+import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
+public class BackEnd extends javax.swing.JFrame {
 
-public class BackEnd extends javax.swing.JFrame { 
     /**
      * Creates new form eshop
      */
     public BackEnd() {
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -124,9 +126,9 @@ public class BackEnd extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -410,12 +412,15 @@ public class BackEnd extends javax.swing.JFrame {
 
     private void CadastrarMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CadastrarMonitorActionPerformed
         // TODO add your handling code here:
-        TelaDadosMonitor tela = new TelaDadosMonitor(1,0);
+        TelaDadosMonitor tela = new TelaDadosMonitor(1, 0);
         tela.setVisible(true);
     }//GEN-LAST:event_CadastrarMonitorActionPerformed
 
     private void ListarMonitoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListarMonitoresActionPerformed
-        // TODO add your handling code here:
+        
+        // Configurando interface
+        
+        
         // Cria um objeto ProdutoDAO para acesso aos métodos de acesso
         // ao banco do Objeto Monitores
         ProdutoDAO pd = new ProdutoDAO();
@@ -423,16 +428,16 @@ public class BackEnd extends javax.swing.JFrame {
         Arraylist*/
         ArrayList<String> ar = pd.listarMonitores();
         // Verifica se a listagem foi gerada
-        if (ar==null) {
+        if (ar == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "FREQUENCIA", "POLEGADAS", 
-                "ENTRADAS", "QTD");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "FREQUENCIA", "POLEGADAS",
+                    "ENTRADAS", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[ar.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -448,13 +453,13 @@ public class BackEnd extends javax.swing.JFrame {
 
     private void CadastrarMouseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CadastrarMouseActionPerformed
         // TODO add your handling code here:
-        TelaDadosMouse tela = new TelaDadosMouse(1,0);
+        TelaDadosMouse tela = new TelaDadosMouse(1, 0);
         tela.setVisible(true);
     }//GEN-LAST:event_CadastrarMouseActionPerformed
 
     private void CadastrarTecladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CadastrarTecladoActionPerformed
         // TODO add your handling code here:
-        TelaDadosTeclado tela = new TelaDadosTeclado(1,0);
+        TelaDadosTeclado tela = new TelaDadosTeclado(1, 0);
         tela.setVisible(true);
     }//GEN-LAST:event_CadastrarTecladoActionPerformed
 
@@ -467,15 +472,15 @@ public class BackEnd extends javax.swing.JFrame {
         Arraylist*/
         ArrayList<String> mor = pd.listarMouses();
         // Verifica se a listagem foi gerada
-        if (mor==null) {
+        if (mor == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "DPI", "PESO", "QTD");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "DPI", "PESO", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[mor.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -498,16 +503,16 @@ public class BackEnd extends javax.swing.JFrame {
         Arraylist*/
         ArrayList<String> tr = pd.listarTeclados();
         // Verifica se a listagem foi gerada
-        if (tr==null) {
+        if (tr == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "TIPO", "COR", 
-                "RGB", "QTD");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "TIPO", "COR",
+                    "RGB", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[tr.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -649,7 +654,7 @@ public class BackEnd extends javax.swing.JFrame {
 
     private void CadastrarFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CadastrarFornecedorActionPerformed
         // TODO add your handling code here:
-        TelaDadosFornecedor tela = new TelaDadosFornecedor(1,0);
+        TelaDadosFornecedor tela = new TelaDadosFornecedor(1, 0);
         tela.setVisible(true);
     }//GEN-LAST:event_CadastrarFornecedorActionPerformed
 
@@ -704,16 +709,16 @@ public class BackEnd extends javax.swing.JFrame {
         Arraylist*/
         ArrayList<String> fr = fd.listarFornecedor();
         // Verifica se a listagem foi gerada
-        if (fr==null) {
+        if (fr == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "CIDADE", "BAIRRO", "RUA", "CEP", 
-                "CNPJ");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "CIDADE", "BAIRRO", "RUA", "CEP",
+                    "CNPJ");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[fr.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -773,15 +778,15 @@ public class BackEnd extends javax.swing.JFrame {
         Arraylist*/
         ArrayList<String> cr = cd.listarCompras();
         // Verifica se a listagem foi gerada
-        if (cr==null) {
+        if (cr == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO","CODIGOPRODUTO", "NOME", "CODIGOFORNECEDOR", "FORNECEDOR", "QTD");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "CODIGOPRODUTO", "NOME", "CODIGOFORNECEDOR", "FORNECEDOR", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[cr.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -797,22 +802,28 @@ public class BackEnd extends javax.swing.JFrame {
 
     private void SolicitarMousesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SolicitarMousesActionPerformed
         // TODO add your handling code here:
-        String CODIGO = jLista.getSelectedValue().substring(0, 10);
-        if (Integer.parseInt(CODIGO.trim()) != 0) {
-            if (Integer.parseInt(CODIGO.trim()) <= 0) {
+        
+        if (jLista.getSelectedIndex() == -1) {
+            String mensagem = "Liste e selecione um Mouse primeiro!!!";
+            JOptionPane.showMessageDialog(null, mensagem);
+        } else {
+            String CODIGO = jLista.getSelectedValue().substring(0, 10);
+            if (Integer.parseInt(CODIGO.trim()) != 0) {
+                if (Integer.parseInt(CODIGO.trim()) <= 0) {
+                    String mensagem = "Opção inválida!";
+                    JOptionPane.showMessageDialog(null, mensagem);
+                }
+                // Executa a janela de preenchimento de dados em modo alteração
+                // 1o parâmetro = 2 - Alteração e 2o parâmetro = codigo do registro 
+                // o trim() é necessário para eliminar os espaços na conversão
+                TelaDadosReposicao tela = new TelaDadosReposicao(3, Integer.parseInt(CODIGO.trim()));
+                tela.setVisible(true);
+                // Configura os comonentes que serão liberados ou restringidos
+            } // Verificação de segurança
+            else {
                 String mensagem = "Opção inválida!";
                 JOptionPane.showMessageDialog(null, mensagem);
             }
-            // Executa a janela de preenchimento de dados em modo alteração
-            // 1o parâmetro = 2 - Alteração e 2o parâmetro = codigo do registro 
-            // o trim() é necessário para eliminar os espaços na conversão
-            TelaDadosReposicao tela = new TelaDadosReposicao(3, Integer.parseInt(CODIGO.trim()));
-            tela.setVisible(true);
-            // Configura os comonentes que serão liberados ou restringidos
-        } // Verificação de segurança
-        else {
-            String mensagem = "Opção inválida!";
-            JOptionPane.showMessageDialog(null, mensagem);
         }
     }//GEN-LAST:event_SolicitarMousesActionPerformed
 
@@ -868,7 +879,7 @@ public class BackEnd extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, mensagem);
         }
     }//GEN-LAST:event_ReceberTecladosActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -908,7 +919,7 @@ public class BackEnd extends javax.swing.JFrame {
             public void run() {
                 new BackEnd().setVisible(true);
             }
-        });   
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

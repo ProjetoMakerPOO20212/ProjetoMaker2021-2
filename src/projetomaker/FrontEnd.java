@@ -7,27 +7,29 @@ package projetomaker;
 
 import DBA.ProdutoDAO;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import produtos.Produtos;
 
 /**
  *
  * @author Artur de Faria
  */
-
-
-
-
 public class FrontEnd extends javax.swing.JFrame {
 
-    
-    
+    private static int carrinhoI = 0;
+    private static String tipo = "";
+    private static ArrayList<String> listaCarrinho = new ArrayList<String>();
+
     /**
      * Creates new form eshop
      */
     public FrontEnd() {
         initComponents();
+        ImageIcon img = new ImageIcon("bluekart500x500.png");
+        this.setIconImage(img.getImage());
+        this.setTitle("~BLUE KART~ SUA LOJA VIRTUAL ^Hi~Tech_No~Things^ ~");
     }
 
     /**
@@ -48,9 +50,11 @@ public class FrontEnd extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jmMonitor = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jmMouse = new javax.swing.JMenu();
+        jmTeclado = new javax.swing.JMenu();
+        jmKart = new javax.swing.JMenu();
+        jmiFinalizarKart = new javax.swing.JMenuItem();
+        jmiLimparKart = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -97,6 +101,11 @@ public class FrontEnd extends javax.swing.JFrame {
         jLista.setForeground(new java.awt.Color(2, 31, 49));
         jLista.setAlignmentX(0.0F);
         jLista.setAlignmentY(0.0F);
+        jLista.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jListaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jLista);
 
         lblTitulo.setFont(new java.awt.Font("Agency FB", 1, 16)); // NOI18N
@@ -169,21 +178,54 @@ public class FrontEnd extends javax.swing.JFrame {
         });
         jMenuBar1.add(jmMonitor);
 
-        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projetomaker/mouse.png"))); // NOI18N
-        jMenu2.setText("Mouse");
-        jMenu2.setAlignmentX(2.0F);
-        jMenu2.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
-        jMenuBar1.add(jMenu2);
+        jmMouse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projetomaker/mouse.png"))); // NOI18N
+        jmMouse.setText("Mouse");
+        jmMouse.setAlignmentX(2.0F);
+        jmMouse.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jmMouse.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmMouseMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jmMouse);
 
-        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projetomaker/teclado.png"))); // NOI18N
-        jMenu1.setText("Teclado");
-        jMenu1.setAlignmentX(2.0F);
-        jMenu1.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jmTeclado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projetomaker/teclado.png"))); // NOI18N
+        jmTeclado.setText("Teclado");
+        jmTeclado.setAlignmentX(2.0F);
+        jmTeclado.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jmTeclado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmTecladoMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jmTeclado);
 
-        jMenuItem1.setText("jMenuItem1");
-        jMenu1.add(jMenuItem1);
+        jmKart.setBackground(new java.awt.Color(102, 102, 102));
+        jmKart.setForeground(new java.awt.Color(51, 255, 255));
+        jmKart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projetomaker/kart50x50.png"))); // NOI18N
+        jmKart.setText("Vazio");
+        jmKart.setFont(new java.awt.Font("Agency FB", 1, 24)); // NOI18N
+        jmKart.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jmKart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmKartMouseClicked(evt);
+            }
+        });
 
-        jMenuBar1.add(jMenu1);
+        jmiFinalizarKart.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jmiFinalizarKart.setText("Finalizar Carrinho");
+        jmKart.add(jmiFinalizarKart);
+
+        jmiLimparKart.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        jmiLimparKart.setText("Limpar Carrinho");
+        jmiLimparKart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiLimparKartActionPerformed(evt);
+            }
+        });
+        jmKart.add(jmiLimparKart);
+
+        jMenuBar1.add(jmKart);
 
         jMenu4.setBackground(new java.awt.Color(255, 51, 0));
         jMenu4.setForeground(new java.awt.Color(255, 255, 255));
@@ -220,8 +262,8 @@ public class FrontEnd extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 564, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 21, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleName("usuario");
@@ -231,30 +273,31 @@ public class FrontEnd extends javax.swing.JFrame {
 
     private void IncluirMonitorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IncluirMonitorActionPerformed
         // TODO add your handling code here:
-        TelaDadosMonitor tela = new TelaDadosMonitor(1,0);
+        TelaDadosMonitor tela = new TelaDadosMonitor(1, 0);
         tela.setVisible(true);
-           
+
     }//GEN-LAST:event_IncluirMonitorActionPerformed
 
     private void jmMonitorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmMonitorMouseClicked
-       
+
         // Cria um objeto ALunoDAO para acesso aos métodos de acesso
         // ao banco do Objeto Aluno
+        tipo = "MONITOR";
         ProdutoDAO pd = new ProdutoDAO();
         /*Chama listarMonitores de ProdutoDAO retornando uma
         Arraylist*/
         ArrayList<String> ar = pd.listarMonitores();
         // Verifica se a listagem foi gerada
-        if (ar==null) {
+        if (ar == null) {
             String mensagem = "Listagem Não Gerada!";
             JOptionPane.showMessageDialog(null, mensagem);
-        }else{
+        } else {
             // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "FREQUENCIA", "POLEGADAS", 
-                "ENTRADAS", "QTD");
-        lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
-        lblTitulo.setText(linha);
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "FREQUENCIA", "POLEGADAS",
+                    "ENTRADAS", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
             // Vetor para preparação dos elementos da lista
             String vet[] = new String[ar.size()];
             // Carrega todos os elementos do ArrayList no vetor
@@ -265,9 +308,203 @@ public class FrontEnd extends javax.swing.JFrame {
             jLista.setFont(new Font("Courier New", Font.PLAIN, 16));
             jLista.setListData(vet);
             jLista.setSelectedIndex(-1);
-            
+
         }
     }//GEN-LAST:event_jmMonitorMouseClicked
+
+    private void jmMouseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmMouseMouseClicked
+
+        tipo = "MOUSE";
+        // Cria um objeto ProdutoDAO para acesso aos métodos de acesso
+        // ao banco do Objeto Mouses
+        ProdutoDAO pd = new ProdutoDAO();
+        /*Chama listarMouses de ProdutoDAO retornando uma
+        Arraylist*/
+        ArrayList<String> mor = pd.listarMouses();
+        // Verifica se a listagem foi gerada
+        if (mor == null) {
+            String mensagem = "Listagem Não Gerada!";
+            JOptionPane.showMessageDialog(null, mensagem);
+        } else {
+            // Formata o título do relatório
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "DPI", "PESO", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
+            // Vetor para preparação dos elementos da lista
+            String vet[] = new String[mor.size()];
+            // Carrega todos os elementos do ArrayList no vetor
+            for (int i = 0; i < mor.size(); i++) {
+                vet[i] = mor.get(i);
+            }
+            // Evita que os dados fiquem fora de ordem
+            jLista.setFont(new Font("Courier New", Font.PLAIN, 16));
+            jLista.setListData(vet);
+            jLista.setSelectedIndex(-1);
+        }
+
+    }//GEN-LAST:event_jmMouseMouseClicked
+
+    private void jmTecladoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmTecladoMouseClicked
+
+        tipo = "TECLADO";
+        // TODO add your handling code here:
+        // Cria um objeto ProdutoDAO para acesso aos métodos de acesso
+        // ao banco do Objeto Teclados
+        ProdutoDAO pd = new ProdutoDAO();
+        /*Chama listarTeclados de ProdutoDAO retornando uma
+        Arraylist*/
+        ArrayList<String> tr = pd.listarTeclados();
+        // Verifica se a listagem foi gerada
+        if (tr == null) {
+            String mensagem = "Listagem Não Gerada!";
+            JOptionPane.showMessageDialog(null, mensagem);
+        } else {
+            // Formata o título do relatório
+            String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
+                    "CODIGO", "NOME", "MARCA", "PRECO", "TIPO", "COR",
+                    "RGB", "QTD");
+            lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+            lblTitulo.setText(linha);
+            // Vetor para preparação dos elementos da lista
+            String vet[] = new String[tr.size()];
+            // Carrega todos os elementos do ArrayList no vetor
+            for (int i = 0; i < tr.size(); i++) {
+                vet[i] = tr.get(i);
+            }
+            // Evita que os dados fiquem fora de ordem
+            jLista.setFont(new Font("Courier New", Font.PLAIN, 16));
+            jLista.setListData(vet);
+            jLista.setSelectedIndex(-1);
+        }
+    }//GEN-LAST:event_jmTecladoMouseClicked
+
+    private void jListaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListaMouseClicked
+        // TODO add your handling code here:
+        if (!"".equals(tipo) && !"CARRINHO".equals(tipo) && jLista.getSelectedValue()!=null) {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(String.format("%10s|", tipo));
+            sb.append(jLista.getSelectedValue());
+            String nome = jLista.getSelectedValue().substring(11, 21);
+            nome = nome.trim();
+            String[] opcao = {"Sim", "Não"};
+            String msg = "Incluir "
+                    + nome
+                    + " no carrinho?";
+            int escolha = JOptionPane.showOptionDialog(null, msg,
+                    "Carrinho", 0, JOptionPane.QUESTION_MESSAGE, null, opcao, "Sim");
+
+            if (escolha == 0) {
+                //System.out.println(sb);
+                carrinhoI++;
+                jmKart.setText(Integer.toString(carrinhoI));
+                listaCarrinho.add(sb.toString());
+                System.out.println(listaCarrinho.toString());
+
+            }
+        } else if ("CARRINHO".equals(tipo)) {
+            String nome = jLista.getSelectedValue().substring(22, 32);
+            nome = nome.trim();
+            String[] opcao = {"Remover", "Adicionar outro", "Mostrar Detalhes",
+                "Fechar"};
+            String msg = "Item do carrinho " + nome;
+            int escolha = JOptionPane.showOptionDialog(null, msg,
+                    "Carrinho", 0, JOptionPane.QUESTION_MESSAGE, null, opcao,
+                    "Fechar");
+            switch (escolha) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    msg = listaCarrinho.get(jLista.getSelectedIndex());
+                    JOptionPane.showConfirmDialog(null, msg);
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }//GEN-LAST:event_jListaMouseClicked
+    private int existe(String[] vet, String s) {
+        int count = 0;
+        for (int i = 0; i < vet.length; i++) {
+            if (s.equals(vet[i])) {
+                count++;
+                System.out.println("valor da string " + s);
+                System.out.println("valor do vetor " + vet[i]);
+                System.out.println("valor count " + count);
+
+            }
+
+        }
+        //System.out.println(count);
+        return count;
+    }
+    private void jmKartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmKartMouseClicked
+        // TODO add your handling code here:
+        
+            if (carrinhoI > 0) {
+                tipo = "CARRINHO";
+                String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s",
+                        "PRODUTO", "CODIGO", "NOME", "MARCA", "PRECO", "Qtd");
+                lblTitulo.setFont(new Font("Courier New", Font.PLAIN, 16));
+                lblTitulo.setText(linha);
+                // Vetor para preparação dos elementos da lista
+                String[] vet = new String[listaCarrinho.size()];
+                // Carrega todos os elementos do ArrayList no vetor            
+                //contando os duplicados
+                int[][] aux = new int[listaCarrinho.size()][listaCarrinho.size()];
+                int[] qtd = new int[listaCarrinho.size()];
+                for (int i = 0; i < listaCarrinho.size(); i++) {
+                    aux[i][i] = 0;
+                    for (int j = 0; j < listaCarrinho.size(); j++) {
+                        if (listaCarrinho.get(i).equals(listaCarrinho.get(j))) {
+                            aux[i][j]++;
+                        }
+                    }
+                }
+                for (int i = 0; i < listaCarrinho.size(); i++) {
+                    qtd[i] = 0;
+                    for (int j = 0; j < listaCarrinho.size(); j++) {
+                        qtd[i] += aux[i][j];
+                    }
+                }
+                //verificado duplicados
+                //vet[0] = listaCarrinho.get(0);
+                int[] vetI = new int[listaCarrinho.size()];
+                for (int i = 0; i < listaCarrinho.size(); i++) {
+                    if (existe(vet, listaCarrinho.get(i).substring(0, 59)) < 1) {
+                        vet[i] = listaCarrinho.get(i).substring(0, 59);
+                    } else {
+                        vetI[i] = qtd[i];
+                    }
+                }
+                String[] vetFinal = new String[listaCarrinho.size()];
+                for (int i = 0; i < listaCarrinho.size(); i++) {
+                    if (vet[i] != null) {
+                        vetFinal[i] = vet[i] + qtd[i];
+                    }
+                }
+
+                // Evita que os dados fiquem fora de ordem
+                jLista.setFont(new Font("Courier New", Font.PLAIN, 16));
+                jLista.setListData(vetFinal);
+                jLista.setSelectedIndex(-1);
+            }
+        
+    }//GEN-LAST:event_jmKartMouseClicked
+
+    private void jmiLimparKartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLimparKartActionPerformed
+        // TODO add your handling code here:
+        String vet[] = new String[0];
+        jLista.setListData(vet);
+        listaCarrinho.clear();
+        carrinhoI = 0;
+        jmKart.setText("Vazio");
+        tipo = "";
+    }//GEN-LAST:event_jmiLimparKartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,6 +515,7 @@ public class FrontEnd extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -303,26 +541,27 @@ public class FrontEnd extends javax.swing.JFrame {
                 new Eshop().setVisible(true);
             }
         });
-        
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem IncluirMonitor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jLista;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu jmKart;
     private javax.swing.JMenu jmMonitor;
+    private javax.swing.JMenu jmMouse;
+    private javax.swing.JMenu jmTeclado;
+    private javax.swing.JMenuItem jmiFinalizarKart;
+    private javax.swing.JMenuItem jmiLimparKart;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }
