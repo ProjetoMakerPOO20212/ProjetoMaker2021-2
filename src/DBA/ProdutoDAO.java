@@ -10,746 +10,850 @@ import javax.swing.JOptionPane;
 
 public class ProdutoDAO {
     
-    // Método para realizar a inclusão de um no registro na Tabela MONITOR
-  public boolean inserirMonitor(Monitores monitor) {
-    // Cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de inclusão na tabela MONITOR 
-        String consulta = "INSERT into MONITOR (CODIGO, NOME, MARCA, PRECO, "
-                + "FREQUENCIA, POLEGADAS, ENTRADAS, QTD)"
-                + "VALUES("
-                + ""    + monitor.getCodigo()   + ""
-                + ",' " + monitor.getNome()     + "'"
-                + ",' " + monitor.getMarca()    + "'"
-                + ","   + monitor.getPreco()    + ""
-                + ","   + monitor.getFreq()     + ""
-                + ","   + monitor.getPol()     + ""
-                + ","   + monitor.getEntradas() + ""
-                + ","   + monitor.getEstoque().getQtdEstoque() + ""
-                + ")";
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Monitor não incluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        // Informa que a operação NÃO obteve sucesso
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-  
-public Monitores buscarMonitor(int codigo) {
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Monitores para retornar os dados do registro
-    Monitores m1 = new Monitores();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela MONITOR através do CODIGO
-        String consulta = "select * from MONITOR where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado os valores dos campos são transferidos
-        // para o objeto Monitor
-        if (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            m1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            m1.setNome(rs.getString("NOME"));
-            m1.setMarca(rs.getString("MARCA"));
-            m1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            m1.setFreq(Double.parseDouble(rs.getString("FREQUENCIA")));
-            m1.setPol(Double.parseDouble(rs.getString("POLEGADAS")));
-            m1.setEntradas(Integer.parseInt(rs.getString("ENTRADAS")));
-            m1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-          }
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Monitor não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return null;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna um objeto Monitor com os dados do registro da tabela
-    return m1;
-  }
-
-public boolean buscarMonitorCodigo(int codigo) {
-    boolean resp=false;
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Monitores para retornar os dados do registro
-    Monitores m1 = new Monitores();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela MONITOR através do CODIGO
-        String consulta = "select * from MONITOR where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado retorna verdadeiro
-        if (rs.next()) {
-          resp = true;
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Monitor não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        resp = false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna verdadeiro
-    return resp;
-  }
-
-public boolean alterarMonitor(Monitores m1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();    
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de alteração na tabela MONITOR 
-        String consulta = "UPDATE MONITOR SET NOME='" + m1.getNome() + 
-        "', MARCA='" + m1.getMarca() + "', PRECO=" + m1.getPreco() + 
-        ", FREQUENCIA=" + m1.getFreq() + ", POLEGADAS=" + m1.getPol() + 
-        ", ENTRADAS=" + m1.getEntradas() + " WHERE CODIGO=" + m1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Monitor não alterado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }    
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-public boolean excluirMonitor (Monitores m1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de exclusão na tabela MONITOR 
-        String consulta = "DELETE from MONITOR WHERE CODIGO=" + m1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Monitor não excluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-public boolean inserirTeclado(Teclados teclado) {
-    // Cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de inclusão na tabela TECLADO 
-        String consulta = "INSERT into TECLADO (CODIGO, NOME, MARCA, PRECO, "
-                + "TIPO, COR, RGB, QTD)"
-                + "VALUES("
-                + ""    + teclado.getCodigo()   + ""
-                + ",' " + teclado.getNome()     + "'"
-                + ",' " + teclado.getMarca()    + "'"
-                + ","   + teclado.getPreco()    + ""
-                + ","   + teclado.getTipo()     + ""
-                + ","   + teclado.getCor()     + ""
-                + ","   + teclado.getRgb() + ""
-                + ","   + teclado.getEstoque().getQtdEstoque() + ""
-                + ")";
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Teclado não incluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        // Informa que a operação NÃO obteve sucesso
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-}
-
-public Teclados buscarTeclado(int codigo) {
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Teclados para retornar os dados do registro
-    Teclados t1 = new Teclados();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela TECLADO através do CODIGO
-        String consulta = "select * from TECLADO where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado os valores dos campos são transferidos
-        // para o objeto Teclados
-        if (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            t1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            t1.setNome(rs.getString("NOME"));
-            t1.setMarca(rs.getString("MARCA"));
-            t1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            t1.setTipo(rs.getString("TIPO"));
-            t1.setCor(rs.getString("COR"));
-            t1.setRgb(Boolean.parseBoolean(rs.getString("RGB")));
-            t1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-          }
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Teclado não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return null;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna um objeto Teclados com os dados do registro da tabela
-    return t1;
-  }
-
-public boolean buscarTecladoCodigo(int codigo) {
-    boolean resp=false;
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Teclados para retornar os dados do registro
-    Teclados t1 = new Teclados();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela TECLADO através do CODIGO
-        String consulta = "select * from TECLADO where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado retorna verdadeiro
-        if (rs.next()) {
-          resp = true;
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Teclado não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        resp = false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna verdadeiro
-    return resp;
-  }
-
-public boolean alterarTeclado(Teclados t1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();    
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de alteração na tabela TECLADO 
-        String consulta = "UPDATE TECLADO SET NOME='" + t1.getNome() + 
-        "', MARCA='" + t1.getMarca() + "', PRECO=" + t1.getPreco() + 
-        ", TIPO='" + t1.getTipo() + "', COR='" + t1.getCor() + 
-        "', RGB=" + t1.getRgb() + " WHERE CODIGO=" + t1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Teclado não alterado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }    
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-public boolean excluirTeclado (Teclados t1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de exclusão na tabela TECLADO 
-        String consulta = "DELETE from TECLADO WHERE CODIGO=" + t1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Teclado não excluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-public boolean inserirMouse(Mouses mouse){
-    // Cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de inclusão na tabela MOUSE 
-        String consulta = "INSERT into MOUSE (CODIGO, NOME, MARCA, PRECO, "
-                + "DPI, PESO, QTD)"
-                + "VALUES("
-                + ""    + mouse.getCodigo()   + ""
-                + ",' " + mouse.getNome()     + "'"
-                + ",' " + mouse.getMarca()    + "'"
-                + ","   + mouse.getPreco()    + ""
-                + ","   + mouse.getDpi()     + ""
-                + ","   + mouse.getPeso()     + ""
-                + ","   + mouse.getEstoque().getQtdEstoque() + ""
-                + ")";
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Mouse não incluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        // Informa que a operação NÃO obteve sucesso
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-}
-
-public Mouses buscarMouse(int codigo) {
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Mouses para retornar os dados do registro
-    Mouses mo1 = new Mouses();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela MOUSE através do id
-        String consulta = "select * from MOUSE where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado os valores dos campos são transferidos
-        // para o objeto Mouses
-        if (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            mo1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            mo1.setNome(rs.getString("NOME"));
-            mo1.setMarca(rs.getString("MARCA"));
-            mo1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            mo1.setDpi(Integer.parseInt(rs.getString("DPI")));
-            mo1.setPeso(Double.parseDouble(rs.getString("PESO")));
-            mo1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-          }
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Mouse não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return null;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna um objeto Mouses com os dados do registro da tabela
-    return mo1;
-  }
-
-public boolean buscarMouseCodigo(int codigo) {
-    boolean resp=false;
-    // Cria um objeto de Conexão com o Banco de Dados
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Mouses para retornar os dados do registro
-    Mouses mo1 = new Mouses();
-    // Cria um ResultSet para armazenar o resultado da pesquisa
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta na tabela MOUSE através do CODIGO
-        String consulta = "select * from MOUSE where CODIGO="
-                + String.valueOf(codigo).trim();
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta
-        rs = stm.executeQuery();
-        // Existindo resultado retorna verdadeiro
-        if (rs.next()) {
-          resp = true;
-        }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Mouse não encontrado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        resp = false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Retorna verdadeiro
-    return resp;
-  }
-
-public boolean alterarMouse(Mouses mo1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();    
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de alteração na tabela MOUSE 
-        String consulta = "UPDATE MOUSE SET NOME='" + mo1.getNome() + 
-        "', MARCA='" + mo1.getMarca() + "', PRECO=" + mo1.getPreco() + 
-        ", DPI=" + mo1.getDpi() + ", PESO=" + mo1.getPeso() + 
-        " WHERE CODIGO=" + mo1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Mouse não alterado!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }    
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-public boolean excluirMouse (Mouses mo1) {
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de exclusão na tabela MOUSE 
-        String consulta = "DELETE from MOUSE WHERE CODIGO=" + mo1.getCodigo();
-        // Cria um objeto para realizar a consulta
-        Statement st = acesso.con.createStatement();
-        // Executa a consulta
-        st.executeUpdate(consulta);
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        String mensagem = "Mouse não excluído!";
-        JOptionPane.showMessageDialog(null, mensagem);
-        return false;
-      }
-    }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return true;
-  }
-
-  public ArrayList<String> listarMonitores() {
-    ArrayList<String> ar =null;
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Monitor armazenar os dados de cada registro da tabela
-    Monitores m1 = new Monitores();
-    // Cria um ResultaSet para armazenar os registros resultantes da consulta
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de busca dos registros na tabela MONITOR 
-        String consulta = "select * from MONITOR";
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta ao Banco e armazena o resultado no ResultSet
-        rs = stm.executeQuery();
+    public Monitor buscarMonitor(String codigoBarra) {
         
-        /* Cria um ArrayList para receber os registros da consulta e
-        preencher a lista*/
-        ar = new ArrayList();
+        AcessoBD acesso = new AcessoBD();
+        Monitor m1 = new Monitor();
+        ResultSet rs;
         
-        // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "FREQUENCIA", "POLEGADAS", 
-                "ENTRADAS", "QTD");                
-        // Exibe o título do relatório
-        System.out.println(linha);
-        // Enquanto houver registros, o objeto Monitor recebe os dados 
-        // de cada registro da tabela
-        while (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            m1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            m1.setNome(rs.getString("NOME"));
-            m1.setMarca(rs.getString("MARCA"));
-            m1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            m1.setFreq(Double.parseDouble(rs.getString("FREQUENCIA")));
-            m1.setPol(Double.parseDouble(rs.getString("POLEGADAS")));
-            m1.setEntradas(Integer.parseInt(rs.getString("ENTRADAS")));
-            m1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-            // Formata a linha de conteúdo do relatório
-            linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                    rs.getString("CODIGO"),
-                    rs.getString("NOME"),
-                    rs.getString("MARCA"),
-                    rs.getString("PRECO"),
-                    rs.getString("FREQUENCIA"),
-                    rs.getString("POLEGADAS"),
-                    rs.getString("ENTRADAS"),
-                    rs.getString("QTD"));
-            // Exibe cada registro
-            System.out.println(linha);
-            // Adiciona a linha ao ArrayList
-                ar.add(linha);
-          }
+        if (acesso.conectar()) {
+            
+            try {
+                String consulta = "select * from Monitor WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    if (rs.getString("codigoBarra") != null) {
+                        m1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        m1.setCodigoBarra(rs.getString("codigoBarra"));
+                        m1.setTipo(rs.getString("tipo"));
+                        m1.setNome(rs.getString("nome"));
+                        m1.setMarca(rs.getString("marca"));
+                        m1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        m1.setFrequencia(Integer.parseInt(rs.getString("frequencia")));
+                        m1.setPolegada(Integer.parseInt(rs.getString("polegada")));
+                        m1.setEntrada(Integer.parseInt(rs.getString("entrada")));
+                        m1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Monitor não encontrado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return null;
+            }
         }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        System.out.println("Lista não Gerada!");
-        return ar;
-      }
+        acesso.desconectar();
+        return m1;
     }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return ar;
-  }
-  
-  public ArrayList<String> listarTeclados() {
-    ArrayList<String> tr =null;
-    // cria o objeto para a conexão
-    AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Teclado armazenar os dados de cada registro da tabela
-    Teclados t1 = new Teclados();
-    // Cria um ResultaSet para armazenar os registros resultantes da consulta
-    ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
-    if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de busca dos registros na tabela TECLADO 
-        String consulta = "select * from TECLADO";
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta ao Banco e armazena o resultado no ResultSet
-        rs = stm.executeQuery();
+    
+    public boolean buscarMonitorCB (String codigoBarra) {
+        boolean resp = false;
+        AcessoBD acesso = new AcessoBD();
+        Monitor m1 = new Monitor();
+        ResultSet rs;
         
-        /* Cria um ArrayList para receber os registros da consulta e
-        preencher a lista*/
-        tr = new ArrayList();
-        
-        // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "TIPO", "COR", 
-                "RGB", "QTD");                
-        // Exibe o título do relatório
-        System.out.println(linha);
-        // Enquanto houver registros, o objeto Teclados recebe os dados 
-        // de cada registro da tabela
-        while (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            t1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            t1.setNome(rs.getString("NOME"));
-            t1.setMarca(rs.getString("MARCA"));
-            t1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            t1.setTipo(rs.getString("TIPO"));
-            t1.setCor(rs.getString("COR"));
-            t1.setRgb(Boolean.parseBoolean(rs.getString("RGB")));
-            t1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-            // Formata a linha de conteúdo do relatório
-            linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                    rs.getString("CODIGO"),
-                    rs.getString("NOME"),
-                    rs.getString("MARCA"),
-                    rs.getString("PRECO"),
-                    rs.getString("TIPO"),
-                    rs.getString("COR"),
-                    rs.getString("RGB"),
-                    rs.getString("QTD"));
-            // Exibe cada registro
-            System.out.println(linha);
-            // Adiciona a linha ao ArrayList
-                tr.add(linha);
-          }
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Monitor WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    resp = true;
+                    String mensagem = "Codigo de barras já cadastrado!";
+                    JOptionPane.showMessageDialog(null, mensagem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = false;
+            }
         }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        System.out.println("Lista não Gerada!");
-        return tr;
-      }
+        acesso.desconectar();
+        return resp;
     }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return tr;
-  }
-  
-  public ArrayList<String> listarMouses() {
+    
+    public boolean cadastrarMonitor(Monitor m1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "INSERT into Monitor (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque, frequencia, polegada, entrada)"
+                    + "VALUES("
+                    + ""    + m1.getCodigo()   + ""
+                    + ",'"   + m1.getCodigoBarra()   + "'"
+                    + ",'"  + m1.getTipo()     + "'"
+                    + ",'"  + m1.getNome()     + "'"
+                    + ",'"  + m1.getMarca()    + "'"
+                    + ","   + m1.getPreco()    + ""
+                    + ","   + m1.getEstoque().getQuantidadeEstoque() + ""
+                    + ","   + m1.getFrequencia()     + ""
+                    + ","   + m1.getPolegada()     + ""
+                    + ","   + m1.getEntrada() + ""
+                    + ")";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + m1.getCodigo()   + ""
+                    + ",'"   + m1.getCodigoBarra()   + "'"
+                    + ",'"  + m1.getTipo()     + "'"
+                    + ",'"  + m1.getNome()     + "'"
+                    + ",'"  + m1.getMarca()    + "'"
+                    + ","   + m1.getPreco()    + ""
+                    + ","   + m1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Monitor não incluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean editarMonitor(Monitor m1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Monitor SET codigoBarra='" + m1.getCodigoBarra() + 
+                "', Tipo='" + m1.getTipo() + "', Nome='" + m1.getNome() + 
+                "', Marca='" + m1.getMarca() + "', preco=" + m1.getPreco() + 
+                ", frequencia=" + m1.getFrequencia() + ", polegada=" + m1.getPolegada() + 
+                ", entrada=" + m1.getEntrada() + " WHERE codigo=" + m1.getCodigo();
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + m1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + m1.getCodigo()   + ""
+                    + ",'"  + m1.getCodigoBarra()   + "'"
+                    + ",'"  + m1.getTipo()     + "'"
+                    + ",'"  + m1.getNome()     + "'"
+                    + ",'"  + m1.getMarca()    + "'"
+                    + ","   + m1.getPreco()    + ""
+                    + ","   + m1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Monitor não alterado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean receberMonitor(Produto p1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Monitor SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "UPDATE Produto SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Monitor não atualizado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean removerMonitor (Monitor m1) {
+        AcessoBD acesso = new AcessoBD();
+        if (acesso.conectar()) {
+            try {
+                String consulta = "DELETE from Monitor WHERE codigoBarra='" + m1.getCodigoBarra() + "'";
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + m1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Monitor não excluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public ArrayList<String> listarMonitor() {
     ArrayList<String> mr =null;
-    // cria o objeto para a conexão
     AcessoBD acesso = new AcessoBD();
-    // Cria um objeto Mouse armazenar os dados de cada registro da tabela
-    Mouses mo1 = new Mouses();
-    // Cria um ResultaSet para armazenar os registros resultantes da consulta
+    Monitor m1 = new Monitor();
     ResultSet rs;
-    // Tenta realizar a conexão com o banco de Dados para realizar a operação
+    
     if (acesso.conectar()) {
-      // Tramento de exceções
-      try {
-        // Define a consulta de busca dos registros na tabela MOUSE 
-        String consulta = "select * from MOUSE";
-        // Cria um objeto para realizar a consulta
-        PreparedStatement stm = acesso.con.prepareStatement(consulta);
-        // Executa a consulta ao Banco e armazena o resultado no ResultSet
-        rs = stm.executeQuery();
-        
-        /* Cria um ArrayList para receber os registros da consulta e
-        preencher a lista*/
-        mr = new ArrayList();
-        
-        // Formata o título do relatório
-        String linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                "CODIGO", "NOME", "MARCA", "PRECO", "DPI", "PESO", "QTD");                
-        // Exibe o título do relatório
-        System.out.println(linha);
-        // Enquanto houver registros, o objeto Mouses recebe os dados 
-        // de cada registro da tabela
-        while (rs.next()) {
-          if (Integer.parseInt(rs.getString("CODIGO")) > 0) {
-            mo1.setCodigo(Integer.parseInt(rs.getString("CODIGO")));
-            mo1.setNome(rs.getString("NOME"));
-            mo1.setMarca(rs.getString("MARCA"));
-            mo1.setPreco(Double.parseDouble(rs.getString("PRECO")));
-            mo1.setDpi(Integer.parseInt(rs.getString("DPI")));
-            mo1.setPeso(Double.parseDouble(rs.getString("PESO")));
-            mo1.getEstoque().setQtdEstoque(Integer.parseInt(rs.getString("QTD")));
-            // Formata a linha de conteúdo do relatório
-            linha = String.format("%10s|%10s|%10s|%10s|%10s|%10s|%10s",
-                    rs.getString("CODIGO"),
-                    rs.getString("NOME"),
-                    rs.getString("MARCA"),
-                    rs.getString("PRECO"),
-                    rs.getString("DPI"),
-                    rs.getString("PESO"),
-                    rs.getString("QTD"));
-            // Exibe cada registro
-            System.out.println(linha);
-            // Adiciona a linha ao ArrayList
-                mr.add(linha);
-          }
+        try {
+            String consulta = "select * from Monitor";
+            PreparedStatement stm = acesso.con.prepareStatement(consulta);
+            rs = stm.executeQuery();
+            
+            mr = new ArrayList();
+            String linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s|%10s", 
+                    "Codigo", "Codigo de Barras", "Tipo", "Nome", 
+                    "Marca", "Preco", "Quantidade em estoque", "Frequencia",
+                    "Polegadas", "Entradas");
+            mr.add(linha);
+            
+            while (rs.next()) {
+                if (Integer.parseInt(rs.getString("codigo")) > 0) {
+                    m1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                    m1.setCodigoBarra(rs.getString("codigoBarra"));
+                    m1.setTipo(rs.getString("tipo"));
+                    m1.setNome(rs.getString("nome"));
+                    m1.setMarca(rs.getString("marca"));
+                    m1.setPreco(Double.parseDouble(rs.getString("preco")));
+                    m1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                    m1.setFrequencia(Integer.parseInt(rs.getString("frequencia")));
+                    m1.setPolegada(Integer.parseInt(rs.getString("polegada")));
+                    m1.setEntrada(Integer.parseInt(rs.getString("entrada")));
+                    
+                    linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s|%10s",
+                            rs.getString("codigo"),
+                            rs.getString("codigoBarra"),
+                            rs.getString("tipo"),
+                            rs.getString("nome"),
+                            rs.getString("marca"),
+                            rs.getString("preco"),
+                            rs.getString("quantidadeEstoque"),
+                            rs.getString("frequencia"),
+                            rs.getString("polegada"),
+                            rs.getString("entrada"));
+                    mr.add(linha);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lista não Gerada!");
+            return mr;
         }
-      } catch (Exception e) {
-        // Informa caso a operação não tenha obtido sucesso
-        e.printStackTrace();
-        System.out.println("Lista não Gerada!");
-        return mr;
-      }
     }
-    // Desconecta com o Banco após realizar a operação
-    acesso.desconectar();
-    // Informa que a operação obteve sucesso
-    return mr;
-  }
+        acesso.desconectar();
+        return mr;
+    }
+    
+    public Mouse buscarMouse(String codigoBarra) {
+        
+        AcessoBD acesso = new AcessoBD();
+        Mouse mo1 = new Mouse();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            
+            try {
+                String consulta = "select * from Mouse WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    if (rs.getString("codigoBarra") != null) {
+                        mo1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        mo1.setCodigoBarra(rs.getString("codigoBarra"));
+                        mo1.setTipo(rs.getString("tipo"));
+                        mo1.setNome(rs.getString("nome"));
+                        mo1.setMarca(rs.getString("marca"));
+                        mo1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        mo1.setDpi(Integer.parseInt(rs.getString("dpi")));
+                        mo1.setPeso(Double.parseDouble(rs.getString("peso")));
+                        mo1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Mouse não encontrado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return null;
+            }
+        }
+        acesso.desconectar();
+        return mo1;
+    }
+    
+    public boolean buscarMouseCB (String codigoBarra) {
+        boolean resp = false;
+        AcessoBD acesso = new AcessoBD();
+        Mouse mo1 = new Mouse();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Mouse WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    resp = true;
+                    String mensagem = "Codigo de barras já cadastrado!";
+                    JOptionPane.showMessageDialog(null, mensagem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = false;
+            }
+        }
+        acesso.desconectar();
+        return resp;
+    }
+    
+    public boolean cadastrarMouse(Mouse mo1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "INSERT into Mouse (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque, dpi, peso)"
+                    + "VALUES("
+                    + ""    + mo1.getCodigo()   + ""
+                    + ",'"  + mo1.getCodigoBarra()   + "'"
+                    + ",'"  + mo1.getTipo()     + "'"
+                    + ",'"  + mo1.getNome()     + "'"
+                    + ",'"  + mo1.getMarca()    + "'"
+                    + ","   + mo1.getPreco()    + ""
+                    + ","   + mo1.getEstoque().getQuantidadeEstoque() + ""
+                    + ","   + mo1.getDpi()      + ""
+                    + ","   + mo1.getPeso()     + ""
+                    + ")";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + mo1.getCodigo()   + ""
+                    + ",'"  + mo1.getCodigoBarra()   + "'"
+                    + ",'"  + mo1.getTipo()     + "'"
+                    + ",'"  + mo1.getNome()     + "'"
+                    + ",'"  + mo1.getMarca()    + "'"
+                    + ","   + mo1.getPreco()    + ""
+                    + ","   + mo1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Mouse não incluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean editarMouse(Mouse mo1) {
+        AcessoBD acesso = new AcessoBD();
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Mouse SET codigoBarra='" + mo1.getCodigoBarra() + 
+                "', Tipo='" + mo1.getTipo() + "', Nome='" + mo1.getNome() + 
+                "', Marca='" + mo1.getMarca() + "', preco=" + mo1.getPreco() + 
+                ", dpi=" + mo1.getDpi() + ", peso=" + mo1.getPeso() + 
+                " WHERE codigo=" + mo1.getCodigo();
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + mo1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + mo1.getCodigo()   + ""
+                    + ",'"  + mo1.getCodigoBarra()   + "'"
+                    + ",'"  + mo1.getTipo()     + "'"
+                    + ",'"  + mo1.getNome()     + "'"
+                    + ",'"  + mo1.getMarca()    + "'"
+                    + ","   + mo1.getPreco()    + ""
+                    + ","   + mo1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Mouse não alterado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean receberMouse(Produto p1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Mouse SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "UPDATE Produto SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Mouse não atualizado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean removerMouse (Mouse mo1) {
+        AcessoBD acesso = new AcessoBD();
+        if (acesso.conectar()) {
+            try {
+                String consulta = "DELETE from Mouse WHERE codigoBarra='" + mo1.getCodigoBarra() + "'";
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + mo1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Mouse não excluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public ArrayList<String> listarMouse() {
+        ArrayList<String> mor =null;
+        AcessoBD acesso = new AcessoBD();
+        Mouse mo1 = new Mouse();
+        ResultSet rs;
+
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Mouse";
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+
+                mor = new ArrayList();
+                String linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s", 
+                        "Codigo", "Codigo de Barras", "Tipo", "Nome", 
+                        "Marca", "Preco", "Quantidade em estoque", "DPI",
+                        "Peso");
+                mor.add(linha);
+
+                while (rs.next()) {
+                    if (Integer.parseInt(rs.getString("codigo")) > 0) {
+                        mo1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        mo1.setCodigoBarra(rs.getString("codigoBarra"));
+                        mo1.setTipo(rs.getString("tipo"));
+                        mo1.setNome(rs.getString("nome"));
+                        mo1.setMarca(rs.getString("marca"));
+                        mo1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        mo1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                        mo1.setDpi(Integer.parseInt(rs.getString("dpi")));
+                        mo1.setPeso(Double.parseDouble(rs.getString("peso")));
+
+                        linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s",
+                                rs.getString("codigo"),
+                                rs.getString("codigoBarra"),
+                                rs.getString("tipo"),
+                                rs.getString("nome"),
+                                rs.getString("marca"),
+                                rs.getString("preco"),
+                                rs.getString("quantidadeEstoque"),
+                                rs.getString("dpi"),
+                                rs.getString("peso"));
+                        mor.add(linha);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Lista não Gerada!");
+                return mor;
+            }
+        }
+        acesso.desconectar();
+        return mor;
+    }
+    
+    public Teclado buscarTeclado(String codigoBarra) {
+        
+        AcessoBD acesso = new AcessoBD();
+        Teclado t1 = new Teclado();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            
+            try {
+                String consulta = "select * from Teclado WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    if (rs.getString("codigoBarra") != null) {
+                        t1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        t1.setCodigoBarra(rs.getString("codigoBarra"));
+                        t1.setTipo(rs.getString("tipo"));
+                        t1.setNome(rs.getString("nome"));
+                        t1.setMarca(rs.getString("marca"));
+                        t1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        t1.setModelo(rs.getString("modelo"));
+                        t1.setCor(rs.getString("cor"));
+                        t1.setRgb(Boolean.parseBoolean(rs.getString("rgb")));
+                        t1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Teclado não encontrado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return null;
+            }
+        }
+        acesso.desconectar();
+        return t1;
+    }
+    
+    public boolean buscarTecladoCB (String codigoBarra) {
+        boolean resp = false;
+        AcessoBD acesso = new AcessoBD();
+        Teclado t1 = new Teclado();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Teclado WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    resp = true;
+                    String mensagem = "Codigo de barras já cadastrado!";
+                    JOptionPane.showMessageDialog(null, mensagem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = false;
+            }
+        }
+        acesso.desconectar();
+        return resp;
+    }
+    
+    public boolean cadastrarTeclado(Teclado t1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "INSERT into Teclado (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque, modelo, cor, rgb)"
+                    + "VALUES("
+                    + ""     + t1.getCodigo()   + ""
+                    + ",'"   + t1.getCodigoBarra()   + "'"
+                    + ",'"   + t1.getTipo()     + "'"
+                    + ",'"   + t1.getNome()     + "'"
+                    + ",'"   + t1.getMarca()    + "'"
+                    + ","    + t1.getPreco()    + ""
+                    + ","    + t1.getEstoque().getQuantidadeEstoque() + ""
+                    + ",'"   + t1.getModelo()      + "'"
+                    + ",'"   + t1.getCor()     + "'"
+                    + ",'"   + t1.isRgb()     + "'"
+                    + ")";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + t1.getCodigo()   + ""
+                    + ",'"  + t1.getCodigoBarra()   + "'"
+                    + ",'"  + t1.getTipo()     + "'"
+                    + ",'"  + t1.getNome()     + "'"
+                    + ",'"  + t1.getMarca()    + "'"
+                    + ","   + t1.getPreco()    + ""
+                    + ","   + t1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Teclado não incluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean editarTeclado(Teclado t1) {
+        AcessoBD acesso = new AcessoBD();
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Teclado SET codigoBarra='" + t1.getCodigoBarra() + 
+                "', Tipo='" + t1.getTipo() + "', Nome='" + t1.getNome() + 
+                "', Marca='" + t1.getMarca() + "', preco=" + t1.getPreco() + 
+                ", modelo='" + t1.getModelo() + "', cor='" + t1.getCor() + 
+                "', rgb='" + t1.isRgb() + "' WHERE codigo=" + t1.getCodigo();
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + t1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "INSERT into Produto (codigo, codigoBarra, tipo, nome, "
+                    + "marca, preco, quantidadeEstoque)"
+                    + "VALUES("
+                    + ""    + t1.getCodigo()   + ""
+                    + ",'"  + t1.getCodigoBarra()   + "'"
+                    + ",'"  + t1.getTipo()     + "'"
+                    + ",'"  + t1.getNome()     + "'"
+                    + ",'"  + t1.getMarca()    + "'"
+                    + ","   + t1.getPreco()    + ""
+                    + ","   + t1.getEstoque().getQuantidadeEstoque() + ""
+                    + ")";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Teclado não alterado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean receberTeclado(Produto p1) {
+        AcessoBD acesso = new AcessoBD();
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "UPDATE Teclado SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "UPDATE Produto SET quantidadeEstoque=" + p1.getEstoque().getQuantidadeEstoque() 
+                + " WHERE codigoBarra='" + p1.getCodigoBarra() + "'";
+                
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Teclado não atualizado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public boolean removerTeclado (Teclado t1) {
+        AcessoBD acesso = new AcessoBD();
+        if (acesso.conectar()) {
+            try {
+                String consulta = "DELETE from Teclado WHERE codigoBarra='" + t1.getCodigoBarra() + "'";
+                Statement st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+                
+                consulta = "DELETE from Produto WHERE codigoBarra='" + t1.getCodigoBarra() + "'";
+                st = acesso.con.createStatement();
+                st.executeUpdate(consulta);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Teclado não excluído!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return false;
+            }
+        }
+        acesso.desconectar();
+        return true;
+    }
+    
+    public ArrayList<String> listarTeclado() {
+        ArrayList<String> tr =null;
+        AcessoBD acesso = new AcessoBD();
+        Teclado t1 = new Teclado();
+        ResultSet rs;
+
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Teclado";
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+
+                tr = new ArrayList();
+                String linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s|%10s",
+                        "Codigo", "Codigo de Barras", "Tipo", "Nome", 
+                        "Marca", "Preco", "Quantidade em estoque", "Modelo",
+                        "Cor", "RGB");
+                tr.add(linha);
+
+                while (rs.next()) {
+                    if (Integer.parseInt(rs.getString("codigo")) > 0) {
+                        t1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        t1.setCodigoBarra(rs.getString("codigoBarra"));
+                        t1.setTipo(rs.getString("tipo"));
+                        t1.setNome(rs.getString("nome"));
+                        t1.setMarca(rs.getString("marca"));
+                        t1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        t1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                        t1.setModelo(rs.getString("modelo"));
+                        t1.setCor(rs.getString("cor"));
+                        if (rs.getString("rgb").equals(true)) t1.setRgb(true);
+
+                        linha = String.format("%6s|%16s|%7s|%20s|%20s|%10s|%21s|%10s|%10s|%10s",
+                                rs.getString("codigo"),
+                                rs.getString("codigoBarra"),
+                                rs.getString("tipo"),
+                                rs.getString("nome"),
+                                rs.getString("marca"),
+                                rs.getString("preco"),
+                                rs.getString("quantidadeEstoque"),
+                                rs.getString("modelo"),
+                                rs.getString("cor"),
+                                rs.getString("rgb"));
+                        tr.add(linha);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Lista não Gerada!");
+                return tr;
+            }
+        }
+        acesso.desconectar();
+        return tr;
+    }
+    
+    public Produto buscarProduto(String codigoBarra) {
+        
+        AcessoBD acesso = new AcessoBD();
+        Produto p1 = new Produto();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            
+            try {
+                String consulta = "select * from Produto WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    if (rs.getString("codigoBarra") != null) {
+                        p1.setCodigo(Integer.parseInt(rs.getString("codigo")));
+                        p1.setCodigoBarra(rs.getString("codigoBarra"));
+                        p1.setTipo(rs.getString("tipo"));
+                        p1.setNome(rs.getString("nome"));
+                        p1.setMarca(rs.getString("marca"));
+                        p1.setPreco(Double.parseDouble(rs.getString("preco")));
+                        p1.getEstoque().setQuantidadeEstoque(Integer.parseInt(rs.getString("quantidadeEstoque")));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String mensagem = "Produto não encontrado!";
+                JOptionPane.showMessageDialog(null, mensagem);
+                return null;
+            }
+        }
+        acesso.desconectar();
+        return p1;
+    }
+    
+    public boolean buscarProdutoCB (String codigoBarra) {
+        boolean resp = false;
+        AcessoBD acesso = new AcessoBD();
+        Produto p1 = new Produto();
+        ResultSet rs;
+        
+        if (acesso.conectar()) {
+            try {
+                String consulta = "select * from Produto WHERE codigoBarra='" + codigoBarra.trim() + "'";
+                
+                PreparedStatement stm = acesso.con.prepareStatement(consulta);
+                rs = stm.executeQuery();
+                
+                if (rs.next()) {
+                    resp = true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = false;
+            }
+        }
+        acesso.desconectar();
+        return resp;
+    }
 }

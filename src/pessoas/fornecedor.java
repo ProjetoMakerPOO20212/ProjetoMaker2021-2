@@ -1,9 +1,17 @@
 package pessoas;
 
-import java.util.Scanner;
+import produtos.Produto;
 
-public class fornecedor extends pessoa {
-    private String cnpj;
+public class Fornecedor extends Pessoa {
+    private String codigoFornecedor, cnpj;
+
+    public String getCodigoFornecedor() {
+        return codigoFornecedor;
+    }
+
+    public void setCodigoFornecedor(String codigoFornecedor) {
+        this.codigoFornecedor = codigoFornecedor;
+    }
 
     public String getCnpj() {
         return cnpj;
@@ -13,28 +21,19 @@ public class fornecedor extends pessoa {
         this.cnpj = cnpj;
     }
     
-    public fornecedor(){
+    public Fornecedor(){
     }
     
-    public fornecedor(String cnpj){
+    public Fornecedor(String codigoFornecedor, String cnpj){
+        this.codigoFornecedor = codigoFornecedor;
         this.cnpj = cnpj;
     }
     
-    public fornecedor(int codigo, String nome, String cidade, String bairro, 
-            String rua, String cep, String cnpj){
-        super(codigo, nome, cidade, bairro, rua, cep);
+    public Fornecedor(int codigo, String nome, String tipo, String cidade, 
+            String bairro, String rua, String cep, int numero, 
+            String codigoFornecedor, String cnpj){
+        super(codigo, nome, tipo, cidade, bairro, rua, cep, numero);
+        this.codigoFornecedor = codigoFornecedor;
         this.cnpj = cnpj;
-    }
-    
-    public void imprimir() {
-        super.imprimir();
-        System.out.println("CNPJ: " + getCnpj());
-    }
-    
-    public void entrada() {
-        Scanner ent = new Scanner(System.in);
-        super.entrada();
-        System.out.println("CNPJ: ");
-        setCnpj(ent.nextLine());
     }
 }

@@ -1,12 +1,10 @@
 package pessoas;
 
-import java.util.Scanner;
-
-public class pessoa {
+public class Pessoa {
     private int codigo;
-    private String nome;
+    private String nome, tipo;
     
-    endereco endereco = new endereco();
+    Endereco endereco = new Endereco();
 
     public int getCodigo() {
         return codigo;
@@ -24,40 +22,36 @@ public class pessoa {
         this.nome = nome;
     }
 
-    public endereco getEndereco() {
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Endereco getEndereco() {
         return endereco;
     }
     
-    public pessoa(){
+    public Pessoa(){
     }
     
-    public pessoa(int codigo, String nome){
+    public Pessoa(int codigo, String nome, String tipo){
         this.codigo = codigo;
         this.nome = nome;
+        this.tipo = tipo;
     }
     
-    public pessoa(int codigo, String nome, String cidade, String bairro, 
-            String rua, String cep){
+    public Pessoa(int codigo, String nome, String tipo, String cidade, 
+            String bairro, String rua, String cep, int numero){
         this.codigo = codigo;
         this.nome = nome;
+        this.tipo = tipo;
         endereco.setCidade(cidade);
         endereco.setBairro(bairro);
         endereco.setRua(rua);
         endereco.setCep(cep);
-    }
-    
-    public void imprimir() {
-        System.out.println("Codigo: " + getCodigo());
-        System.out.println("Nome: " + getNome());
-        endereco.imprimir();
-    }
-    
-    public void entrada() {
-        Scanner ent = new Scanner(System.in);
-        System.out.println("Codigo: ");
-        setCodigo(Integer.parseInt(ent.nextLine()));
-        System.out.println("Nome: ");
-        setNome(ent.nextLine());
-        endereco.entrada();
+        endereco.setNumero(numero);
     }
 }
